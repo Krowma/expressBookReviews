@@ -12,7 +12,7 @@ public_users.post("/register", (req,res) => {
     if (username && password) {
         if (isValid(username)) {
             users.push({"username": username, "password": password});
-            return res.status(200).json({message: "User successfully registered. Now you can login"});
+            return res.status(200).json({message: "Registered successfully"});
         } else {
             return res.status(404).json({message: "User already exists!"});
         }
@@ -28,9 +28,8 @@ public_users.get('/',function (req, res) {
     });
 
     getBooks
-        .then((data) => res.send(JSON.stringify(books,null,4)))
+        .then((data) => res.send(JSON.stringify(data,null,4)))
         .catch((err) => res.status(404).json({ message: err }));
-    
 });
 
 // Get book details based on ISBN

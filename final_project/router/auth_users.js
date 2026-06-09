@@ -56,15 +56,23 @@ regd_users.post("/login", (req,res) => {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
     const book = books[req.params.isbn];
-    const review = req.params.review;
+    const review = req.body.review;
     const username = req.session.authorization['username'];
-    if(book && review && username)
+    if(!book)
+    {
+        res.status(404).json({ message: "Unable to find book."});
+    }
+    if(!username)
+    {
+        res.status(300).json({ message: "Unable to find user."});
+    }
+    if(review)
     {
         book.reviews[username] = review; 
-        res.status(200).json({ message: "Review added successfully."});
+        res.status(200).json({ message: "Review added/updated successfully", reviews: book.reviews});
     }
     else{
-        res.status(404).json({ message: "Unable to find book."});
+        res.status(404).json({ message: "Empty review is not allowed"});
     }
 });
 
@@ -74,7 +82,7 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
     if(book && username)
     {
         delete book.reviews[username];
-        res.status(200).json({ message: "Review deleted successfully."});
+        res.status(200).json({ message: "Review deleted successfully", reviews: book.reviews});
     }
     else 
     {
